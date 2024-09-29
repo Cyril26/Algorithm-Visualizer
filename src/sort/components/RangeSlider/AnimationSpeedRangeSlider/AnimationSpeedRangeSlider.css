@@ -1,0 +1,42 @@
+.sv #text-animation-speed {
+  color: white;
+}
+
+@media only screen and (max-width: 820px) {
+  .sv #text-animation-speed {
+    font-size: small;
+  }
+}
+
+@media only screen and (max-width: 510px) {
+  .sv #text-animation-speed {
+    font-size: x-small;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .sv #text-animation-speed {
+    font-size: xx-small;
+  }
+}
+
+.sv .range-slider-container {
+  width: 100%;
+  margin-bottom: 2%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50vh;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 183, 255, 0.9),
+    rgba(0, 145, 255, 0.5),
+    rgba(0, 183, 255, 0.9)
+  );
+  opacity: 0.9;
+}
+
+.sv .range-slider-container:hover {
+  opacity: 1;
+}

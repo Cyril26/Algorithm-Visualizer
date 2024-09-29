@@ -1,0 +1,67 @@
+.sv .bar-container {
+  width: 8%;
+  height: 75%;
+  margin-left: -1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sv .bar {
+  width: 4vw;
+  height: 70vh;
+  margin: 0 1.5%;
+  transform-style: preserve-3d;
+  transform: rotateX(-20deg) rotateY(-30deg);
+  background-color: rgba(254, 254, 254, 0.25);
+}
+
+.sv .side {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: rgba(254, 254, 254, 0.25);
+}
+
+.sv .back {
+  transform: translateZ(-4vw);
+}
+
+.sv .left {
+  transform-origin: left;
+  transform: rotateY(90deg);
+}
+
+.sv .right {
+  transform-origin: right;
+  transform: rotateY(-90deg);
+}
+
+.sv .top {
+  height: 4vw;
+  transform-origin: top;
+  transform: rotateX(-90deg);
+  /* background-color: rgba(254, 254, 254, 0.15); */
+}
+
+.sv .bottom {
+  height: 4vw;
+  transform-origin: top;
+  transform: translateY(70vh) rotateX(-90deg);
+  background-color: rgba(61, 90, 241, 0.5);
+  box-shadow: 5px 5px 50px 5px rgba(61, 90, 241, 0.2);
+  transition: 0.3s;
+}
+
+.sv .color-bar {
+  background-color: rgba(61, 90, 241, 0.5);
+  box-shadow: rgba(61, 90, 241, 0.2);
+  transition: 0.3s;
+}
+
+.sv .input{
+	text-align: center;
+	/* transform: rotate(-90deg); */
+	height: 25px;
+	outline: none;
+}
