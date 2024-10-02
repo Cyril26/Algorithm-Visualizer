@@ -1,28 +1,27 @@
-
 .sv .info-container {
-    color: rgb(0, 29, 67);
-    position: relative;
-    margin: 50px;
-    padding-bottom: 100px;
-  }
-
-  .sv .info-container .info-header {
-    margin-bottom: 20px;
-    padding-top: 20px;
-    letter-spacing: 0.4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-top: 1px solid #cecece;
+  color: rgb(0, 29, 67);
+  position: relative;
+  margin: 50px;
+  padding-bottom: 100px;
 }
 
-  
-  .sv .info-container p{
-    letter-spacing: 0.1px;
-    line-height: 1.6em;
-    margin-bottom: 20px;
-    text-align: left;
-    font-size: medium;
+.sv .info-container .info-header {
+  margin-bottom: 20px;
+  padding-top: 20px;
+  letter-spacing: 0.4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid #cecece;
+}
+
+
+.sv .info-container p {
+  letter-spacing: 0.1px;
+  line-height: 1.6em;
+  margin-bottom: 20px;
+  text-align: left;
+  font-size: medium;
 }
 
 .sv .info-container .info-list {
@@ -39,21 +38,20 @@
 }
 
 .sv .code {
-    text-align: left;
-    padding: 0 250px;
-    height: 500px;
-    overflow-x: hidden;
-    overflow-y: auto;
+  text-align: left;
+  padding: 0 250px;
+  height: 500px;
+  overflow-x: hidden;
+  overflow-y: auto;
   margin-bottom: 30px;
 
 }
 
 
-.sv .info-container .info-table{
+.sv .info-container .info-table {
   margin-left: 25%;
   overflow-x: auto;
   width: 50%;
-  display: block;
   margin-bottom: 28px;
   box-shadow: 0 0 0 1px #d3dce6;
   border-radius: 4px;
@@ -66,9 +64,9 @@
   text-align: left;
 }
 
-.sv table td, table th {
+.sv table td,
+table th {
   padding: 12px 8px;
-  border-bottom: 1px solid rgba(0,0,0,.1);
+  border-bottom: 1px solid rgba(0, 0, 0, .1);
   width: 88%;
 }
-
