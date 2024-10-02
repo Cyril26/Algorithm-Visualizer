@@ -43,7 +43,9 @@ export default class PathfindingVisualizer extends Component {
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
-    this.toggleIsRunning = this.toggleIsRunning.bind(this);
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.toggleWeight = this.toggleWeight.bind(this);
   }
 
   componentDidMount() {
@@ -188,7 +190,7 @@ export default class PathfindingVisualizer extends Component {
     this.resetDraggingState();
   }
 
-  // Helper Functions
+  /******************** Node events ********************/
 
   moveNode(row, col, type) {
     const prevNode = this.state.grid[this.state.currRow][this.state.currCol];
@@ -566,13 +568,12 @@ export default class PathfindingVisualizer extends Component {
     return false;
   };
 
-  toggleWeight = () => {
-    const temp = this.state.changeWeight;
-    this.setState({ changeWeight: !temp });
+  toggleChangeWeight = () => {
+    this.setState(prevState => ({ changeWeight: !prevState.changeWeight }));
   };
 
   render() {
-    const { grid, mouseIsPressed, topMessage } = this.state;
+    const { grid, mouseIsPressed, topMessage, changeWeight } = this.state;
     let button_task = (
       <>
         <button
@@ -632,26 +633,6 @@ export default class PathfindingVisualizer extends Component {
       </>
     );
 
-    // if (topMessage === "Shortest Path") {
-    //   button_task = (
-    //     <h2
-    //       className="btn"
-    //       href="#"
-    //       onClick={() => window.location.reload(false)}
-    //     >
-    //       Reset <br />
-    //       Time : {distanceToBeTraveled}
-    //       <small> [1 Block = 1 Time]</small>
-    //     </h2>
-    //   );
-    // } else if (topMessage === "Final Year Project By Cyril") {
-    //   button_task = <h3 className="running">Running...</h3>;
-    // }
-
-    let changeWeightText = "False";
-
-    if (this.state.changeWeight) changeWeightText = "True";
-
     let textBox = (
       <div className="textBox">
         <div className="weightContainer">
@@ -667,7 +648,7 @@ export default class PathfindingVisualizer extends Component {
             defaultValue="1"
           />
 
-          <button onClick={this.toggleWeight}>{changeWeightText}</button>
+          <button onClick={this.toggleChangeWeight}>{changeWeight ? "True" : "False"}</button>
         </div>
 
         <div className="startPointContainer">
@@ -762,7 +743,7 @@ export default class PathfindingVisualizer extends Component {
                         <tr key={rowIndex}>
                           {row.map((node, nodeIndex) => {
                             const { isStart, isFinish, isWall, isWeight } =
-                              node; //Extracting from the node
+                              node;
                             return (
                               <Node
                                 row={rowIndex}

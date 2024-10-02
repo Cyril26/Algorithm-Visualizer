@@ -15,7 +15,7 @@ export function bfs(grid, startNode, finishNode) {
     ) {
       currentNode.isVisited = true;
       visitedNodesInOrder.push(currentNode);
-      const {col, row} = currentNode;
+      const { col, row } = currentNode;
       let nextNode;
       if (row > 0) {
         nextNode = grid[row - 1][col];
@@ -47,5 +47,4 @@ export function bfs(grid, startNode, finishNode) {
       }
     }
   }
-  // return visitedNodesInOrder;
 }
