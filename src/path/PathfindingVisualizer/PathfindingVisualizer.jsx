@@ -97,60 +97,6 @@ export default class PathfindingVisualizer extends Component {
     };
   };
 
-  /******************** Control mouse events ********************/
-  handleMouseDown(row, col) {
-    if (!this.state.isRunning) {
-      if (this.isGridClear()) {
-        if (
-          document.getElementById(`node-${row}-${col}`).className ===
-          "node node-start"
-        ) {
-          this.setState({
-            mouseIsPressed: true,
-            isStartNode: true,
-            currRow: row,
-            currCol: col,
-          });
-        } else if (
-          document.getElementById(`node-${row}-${col}`).className ===
-          "node node-finish"
-        ) {
-          this.setState({
-            mouseIsPressed: true,
-            isFinishNode: true,
-            currRow: row,
-            currCol: col,
-          });
-        } else if (!this.state.changeWeight) {
-          const newGrid = getNewGridWithWeightToggled(
-            this.state.grid,
-            row,
-            col,
-            this.state.weight
-          );
-          this.setState({
-            grid: newGrid,
-            mouseIsPressed: true,
-            isWeight: true,
-            currRow: row,
-            currCol: col,
-          });
-        } else {
-          const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-          this.setState({
-            grid: newGrid,
-            mouseIsPressed: true,
-            isWallNode: true,
-            currRow: row,
-            currCol: col,
-          });
-        }
-      } else {
-        this.clearGrid();
-      }
-    }
-  }
-
   isGridClear() {
     for (const row of this.state.grid) {
       for (const node of row) {
@@ -168,105 +114,130 @@ export default class PathfindingVisualizer extends Component {
     return true;
   }
 
+  /******************** Control mouse events ********************/
+  handleMouseDown(row, col) {
+    if (this.state.isRunning) return;
+
+    if (!this.isGridClear()) {
+      this.clearGrid();
+      return;
+    }
+
+    const nodeClass = document.getElementById(`node-${row}-${col}`).className;
+
+    if (nodeClass === "node node-start") {
+      this.setState({
+        mouseIsPressed: true,
+        isStartNode: true,
+        currRow: row,
+        currCol: col,
+      });
+    } else if (nodeClass === "node node-finish") {
+      this.setState({
+        mouseIsPressed: true,
+        isFinishNode: true,
+        currRow: row,
+        currCol: col,
+      });
+    } else if (!this.state.changeWeight) {
+      this.toggleWeight(row, col);
+    } else {
+      this.toggleWall(row, col);
+    }
+  }
+
   handleMouseEnter(row, col) {
-    if (!this.state.isRunning) {
-      if (this.state.mouseIsPressed) {
-        const nodeClassName = document.getElementById(
-          `node-${row}-${col}`
-        ).className;
-        if (this.state.isStartNode) {
-          if (nodeClassName !== "node node-wall") {
-            const prevStartNode =
-              this.state.grid[this.state.currRow][this.state.currCol];
-            prevStartNode.isStart = false;
-            document.getElementById(
-              `node-${this.state.currRow}-${this.state.currCol}`
-            ).className = "node";
+    if (this.state.isRunning || !this.state.mouseIsPressed) return;
 
-            this.setState({ currRow: row, currCol: col });
-            const currStartNode = this.state.grid[row][col];
-            currStartNode.isStart = true;
-            document.getElementById(`node-${row}-${col}`).className =
-              "node node-start";
-          }
-          this.setState({ START_NODE_ROW: row, START_NODE_COL: col });
-        } else if (this.state.isFinishNode) {
-          if (nodeClassName !== "node node-wall") {
-            const prevFinishNode =
-              this.state.grid[this.state.currRow][this.state.currCol];
-            prevFinishNode.isFinish = false;
-            document.getElementById(
-              `node-${this.state.currRow}-${this.state.currCol}`
-            ).className = "node";
+    const nodeClassName = document.getElementById(`node-${row}-${col}`).className;
 
-            this.setState({ currRow: row, currCol: col });
-            const currFinishNode = this.state.grid[row][col];
-            currFinishNode.isFinish = true;
-            document.getElementById(`node-${row}-${col}`).className =
-              "node node-finish";
-          }
-          this.setState({ FINISH_NODE_ROW: row, FINISH_NODE_COL: col });
-        } else if (this.state.isWallNode) {
-          const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
-          this.setState({ grid: newGrid });
-        } else if (this.state.isWeight) {
-          const newGrid = getNewGridWithWeightToggled(
-            this.state.grid,
-            row,
-            col,
-            this.state.weight
-          );
-          this.setState({
-            grid: newGrid,
-            mouseIsPressed: true,
-            isWeight: true,
-            currRow: row,
-            currCol: col,
-          });
-        }
-      }
+    if (this.state.isStartNode) {
+      this.moveNode(row, col, "start");
+    } else if (this.state.isFinishNode) {
+      this.moveNode(row, col, "finish");
+    } else if (this.state.isWallNode) {
+      this.toggleWall(row, col);
+    } else if (this.state.isWeight) {
+      this.toggleWeight(row, col);
     }
   }
 
   handleMouseUp(row, col) {
-    if (!this.state.isRunning) {
-      this.setState({ mouseIsPressed: false });
-      if (this.state.isStartNode) {
-        const isStartNode = !this.state.isStartNode;
-        this.setState({
-          isStartNode,
-          START_NODE_ROW: row,
-          START_NODE_COL: col,
-        });
-      } else if (this.state.isFinishNode) {
-        const isFinishNode = !this.state.isFinishNode;
-        this.setState({
-          isFinishNode,
-          FINISH_NODE_ROW: row,
-          FINISH_NODE_COL: col,
-        });
-      }
-      this.getInitialGrid();
+    if (this.state.isRunning) return;
+
+    this.setState({ mouseIsPressed: false });
+
+    if (this.state.isStartNode) {
+      this.setState({
+        isStartNode: false,
+        START_NODE_ROW: row,
+        START_NODE_COL: col,
+      });
+    } else if (this.state.isFinishNode) {
+      this.setState({
+        isFinishNode: false,
+        FINISH_NODE_ROW: row,
+        FINISH_NODE_COL: col,
+      });
     }
+
+    this.getInitialGrid();
   }
 
   handleMouseLeave() {
-    if (this.state.isStartNode) {
-      const isStartNode = !this.state.isStartNode;
-      this.setState({ isStartNode, mouseIsPressed: false });
-    } else if (this.state.isFinishNode) {
-      const isFinishNode = !this.state.isFinishNode;
-      this.setState({ isFinishNode, mouseIsPressed: false });
-    } else if (this.state.isWallNode) {
-      const isWallNode = !this.state.isWallNode;
-      this.setState({ isWallNode, mouseIsPressed: false });
-      this.getInitialGrid();
-    } else if (this.state.isWeight) {
-      const isWeight = !this.state.isWeight;
-      this.setState({ isWeight, mouseIsPressed: false });
-      this.getInitialGrid();
-    }
+    this.resetDraggingState();
   }
+
+  // Helper Functions
+
+  moveNode(row, col, type) {
+    const prevNode = this.state.grid[this.state.currRow][this.state.currCol];
+    prevNode[`is${capitalize(type)}`] = false;
+
+    document.getElementById(`node-${this.state.currRow}-${this.state.currCol}`).className = "node";
+
+    this.setState({ currRow: row, currCol: col });
+
+    const currNode = this.state.grid[row][col];
+    currNode[`is${capitalize(type)}`] = true;
+
+    document.getElementById(`node-${row}-${col}`).className = `node node-${type}`;
+  }
+
+  toggleWall(row, col) {
+    const newGrid = getNewGridWithWallToggled(this.state.grid, row, col);
+    this.setState({
+      grid: newGrid,
+      mouseIsPressed: true,
+      isWallNode: true,
+      currRow: row,
+      currCol: col,
+    });
+  }
+
+  toggleWeight(row, col) {
+    const newGrid = getNewGridWithWeightToggled(this.state.grid, row, col, this.state.weight);
+    this.setState({
+      grid: newGrid,
+      mouseIsPressed: true,
+      isWeight: true,
+      currRow: row,
+      currCol: col,
+    });
+  }
+
+  resetDraggingState() {
+    const resetFlags = {
+      isStartNode: false,
+      isFinishNode: false,
+      isWallNode: false,
+      isWeight: false,
+      mouseIsPressed: false,
+    };
+    this.setState(resetFlags);
+    this.getInitialGrid();
+  }
+
 
   /******************** Clear Board/Walls ********************/
 
@@ -871,3 +842,8 @@ const getNewGridWithWeightToggled = (grid, row, col, weight) => {
   newGrid[row][col] = newNode;
   return newGrid;
 };
+
+
+const capitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
